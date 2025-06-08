@@ -1,0 +1,304 @@
+import React, { useState } from 'react';
+import { MessageCircleMore, PlusCircle, ChevronLeft, ChevronRight, X } from 'lucide-react'; // Importing necessary icons
+
+// Main App component for the e-commerce website
+const App = () => {
+  // Use state to manage products, allowing for manual addition
+  const [products, setProducts] = useState([
+    {
+      id: 1,
+      name: 'Elegant Floral Chiffon Suit',
+      description: 'A beautiful chiffon suit with intricate floral embroidery, perfect for festive occasions. Comes with matching dupatta and bottom. The fabric is lightweight and drapes elegantly, offering both comfort and style. Ideal for daytime events and casual gatherings.',
+      price: '₹2,500',
+      // To use Google Drive images:
+      // 1. Upload image to Google Drive.
+      // 2. Right-click, select "Share," set to "Anyone with the link."
+      // 3. Copy the sharable link (e.g., https://drive.google.com/file/d/FILE_ID/view?usp=sharing)
+      // 4. Extract FILE_ID from the link.
+      // 5. Use this format for direct link: `https://lh3.googleusercontent.com/d/FILE_ID`
+      //    Example (replace with your actual image IDs):
+      imageUrls: [
+        'https://placehold.co/600x750/FADDE1/6B2737?text=Suit+1+View+1',
+        'https://placehold.co/600x750/FADDE1/6B2737?text=Suit+1+View+2',
+        'https://placehold.co/600x750/FADDE1/6B2737?text=Suit+1+View+3',
+        'https://placehold.co/600x750/FADDE1/6B2737?text=Suit+1+View+4',
+      ],
+      whatsappText: 'Hello! I am interested in the Elegant Floral Chiffon Suit (ID: 1). Could you please provide more details?',
+    },
+    {
+      id: 2,
+      name: 'Classic Silk Anarkali Dress',
+      description: 'Luxurious silk Anarkali dress with traditional Zari work. Ideal for weddings and grand events. Available in multiple sizes. This outfit features a fitted bodice and a flowing skirt, creating a graceful silhouette. Pair it with traditional jewelry for a complete look.',
+      price: '₹4,800',
+      imageUrls: [
+        'https://placehold.co/600x750/EAD2D7/4A162B?text=Suit+2+View+1',
+        'https://placehold.co/600x750/EAD2D7/4A162B?text=Suit+2+View+2',
+        'https://placehold.co/600x750/EAD2D7/4A162B?text=Suit+2+View+3',
+        'https://placehold.co/600x750/EAD2D7/4A162B?text=Suit+2+View+4',
+      ],
+      whatsappText: 'Hello! I am interested in the Classic Silk Anarkali Dress (ID: 2). Could you please provide more details?',
+    },
+    {
+      id: 3,
+      name: 'Contemporary Georgette Palazzo Set',
+      description: 'Stylish georgette palazzo set with modern print and comfortable fit. Great for casual outings and semi-formal gatherings. The breathable georgette fabric ensures all-day comfort, while the contemporary print adds a touch of modern sophistication. Easy to style and maintain.',
+      price: '₹1,800',
+      imageUrls: [
+        'https://placehold.co/600x750/D0B8B8/331B2D?text=Suit+3+View+1',
+        'https://placehold.co/600x750/D0B8B8/331B2D?text=Suit+3+View+2',
+        'https://placehold.co/600x750/D0B8B8/331B2D?text=Suit+3+View+3',
+        'https://placehold.co/600x750/D0B8B8/331B2D?text=Suit+3+View+4',
+      ],
+      whatsappText: 'Hello! I am interested in the Contemporary Georgette Palazzo Set (ID: 3). Could you please provide more details?',
+    },
+    {
+      id: 4,
+      name: 'Traditional Cotton Salwar Kameez',
+      description: 'Comfortable and breathable cotton salwar kameez with block print design. Perfect for daily wear and summer. This traditional ensemble is designed for everyday comfort, featuring soft cotton fabric and timeless block print patterns. A versatile addition to your wardrobe.',
+      price: '₹1,200',
+      imageUrls: [
+        'https://placehold.co/600x750/B2A2A2/22152B?text=Suit+4+View+1',
+        'https://placehold.co/600x750/B2A2A2/22152B?text=Suit+4+View+2',
+        'https://placehold.co/600x750/B2A2A2/22152B?text=Suit+4+View+3',
+        'https://placehold.co/600x750/B2A2A2/22152B?text=Suit+4+View+4',
+      ],
+      whatsappText: 'Hello! I am interested in the Traditional Cotton Salwar Kameez (ID: 4). Could you please provide more details?',
+    },
+  ]);
+
+  // Replace with your actual WhatsApp number (including country code without '+')
+  const whatsappNumber = '91491788628'; // WhatsApp number updated here
+
+  // State for managing the product detail modal
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Function to open the product detail modal
+  const openProductModal = (product) => {
+    setSelectedProduct(product);
+    setCurrentImageIndex(0); // Reset image index when opening a new product
+  };
+
+  // Function to close the product detail modal
+  const closeProductModal = () => {
+    setSelectedProduct(null);
+  };
+
+  // Function to navigate to the next image in the modal
+  const nextImage = () => {
+    if (selectedProduct) {
+      setCurrentImageIndex((prevIndex) =>
+        (prevIndex + 1) % selectedProduct.imageUrls.length
+      );
+    }
+  };
+
+  // Function to navigate to the previous image in the modal
+  const prevImage = () => {
+    if (selectedProduct) {
+      setCurrentImageIndex((prevIndex) =>
+        (prevIndex - 1 + selectedProduct.imageUrls.length) % selectedProduct.imageUrls.length
+      );
+    }
+  };
+
+  // Function to generate WhatsApp link
+  const getWhatsAppLink = (text) => {
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+  };
+
+  return (
+    // Main container with responsive padding and background
+    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-purple-50 font-inter text-gray-800 flex flex-col">
+      {/* Header Section */}
+      <header className="bg-white shadow-md p-4 sticky top-0 z-10">
+        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
+          <h1 className="text-3xl font-bold text-pink-600 mb-2 sm:mb-0">
+            Glamour Threads
+          </h1>
+          <nav>
+            <a
+              href={getWhatsAppLink('Hello! I would like to inquire about your ladies suits.')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center px-6 py-3 bg-green-500 text-white font-semibold rounded-full shadow-lg hover:bg-green-600 transition-all duration-300 transform hover:scale-105"
+            >
+              <MessageCircleMore className="w-5 h-5 mr-2" /> Connect on WhatsApp
+            </a>
+          </nav>
+        </div>
+      </header>
+
+      {/* Main Content Area */}
+      <main className="container mx-auto p-4 sm:p-8 flex-grow">
+        <section className="text-center mb-10">
+          <h2 className="text-4xl font-extrabold text-pink-700 mb-4 animate-fade-in-down">
+            Discover Your Perfect Style
+          </h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto animate-fade-in-up">
+            Browse our exclusive collection of exquisite ladies' suits, designed to make you stand out.
+          </p>
+        </section>
+
+        {/* Product Grid */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+          {products.map((product) => (
+            // Product Card
+            <div
+              key={product.id}
+              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col overflow-hidden group cursor-pointer"
+              onClick={() => openProductModal(product)} // Open modal on click
+            >
+              {/* Product Image */}
+              <div className="relative overflow-hidden w-full h-72">
+                <img
+                  src={product.imageUrls[0]} // Display the first image as thumbnail
+                  alt={product.name}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  // Fallback for image loading error
+                  onError={(e) => {
+                    e.target.onerror = null; // Prevents infinite loop if fallback also fails
+                    e.target.src = `https://placehold.co/400x500/CCCCCC/000000?text=Image+Not+Found`;
+                  }}
+                />
+                {/* Price Tag Overlay */}
+                <div className="absolute top-3 right-3 bg-pink-600 text-white text-lg font-bold px-4 py-2 rounded-full shadow-md">
+                  {product.price}
+                </div>
+              </div>
+
+              {/* Product Details */}
+              <div className="p-5 flex-grow flex flex-col">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  {product.name}
+                </h3>
+                <p className="text-sm text-gray-700 mb-4 flex-grow">
+                  {product.description.substring(0, 100)}... {/* Truncate description for card */}
+                </p>
+                {/* WhatsApp Button for specific product */}
+                <a
+                  href={getWhatsAppLink(product.whatsappText)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()} // Prevent modal from opening when clicking WhatsApp button
+                  className="inline-flex items-center justify-center w-full px-4 py-2 bg-gradient-to-r from-green-400 to-green-600 text-white font-medium rounded-lg shadow-md hover:from-green-500 hover:to-green-700 transition-all duration-300 text-base"
+                >
+                  <MessageCircleMore className="w-4 h-4 mr-2" /> Inquire on WhatsApp
+                </a>
+              </div>
+            </div>
+          ))}
+        </section>
+      </main>
+
+      {/* Product Detail Modal */}
+      {selectedProduct && (
+        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 z-50 overflow-auto">
+          <div className="bg-white rounded-xl shadow-2xl p-6 relative max-w-4xl w-full m-auto transform transition-all duration-300 scale-95 md:scale-100">
+            {/* Close Button */}
+            <button
+              onClick={closeProductModal}
+              className="absolute top-4 right-4 bg-gray-200 hover:bg-gray-300 rounded-full p-2 text-gray-600 transition-colors"
+              aria-label="Close"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Image Gallery */}
+              <div className="relative w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-100 rounded-lg overflow-hidden p-2">
+                <img
+                  src={selectedProduct.imageUrls[currentImageIndex]}
+                  alt={`${selectedProduct.name} - View ${currentImageIndex + 1}`}
+                  className="max-h-96 w-auto object-contain rounded-lg shadow-md"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = `https://placehold.co/600x750/CCCCCC/000000?text=Image+Not+Found`;
+                  }}
+                />
+                {/* Navigation Arrows */}
+                {selectedProduct.imageUrls.length > 1 && (
+                  <>
+                    <button
+                      onClick={prevImage}
+                      className="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-colors z-10"
+                      aria-label="Previous image"
+                    >
+                      <ChevronLeft className="w-6 h-6" />
+                    </button>
+                    <button
+                      onClick={nextImage}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-colors z-10"
+                      aria-label="Next image"
+                    >
+                      <ChevronRight className="w-6 h-6" />
+                    </button>
+                  </>
+                )}
+                {/* Thumbnails (optional, but good for UX) */}
+                <div className="flex justify-center mt-4 space-x-2">
+                  {selectedProduct.imageUrls.map((imgUrl, index) => (
+                    <img
+                      key={index}
+                      src={imgUrl}
+                      alt={`Thumbnail ${index + 1}`}
+                      className={`w-16 h-16 object-cover rounded-md cursor-pointer border-2 ${
+                        index === currentImageIndex ? 'border-pink-500' : 'border-transparent'
+                      } hover:border-pink-300 transition-colors`}
+                      onClick={() => setCurrentImageIndex(index)}
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = `https://placehold.co/60x60/CCCCCC/000000?text=Img`;
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Product Info */}
+              <div className="w-full md:w-1/2 flex flex-col">
+                <h2 className="text-3xl font-bold text-gray-900 mb-3">
+                  {selectedProduct.name}
+                </h2>
+                <p className="text-lg text-gray-700 mb-4 flex-grow">
+                  {selectedProduct.description}
+                </p>
+                <div className="text-2xl font-semibold text-pink-600 mb-4">
+                  {selectedProduct.price}
+                </div>
+                <a
+                  href={getWhatsAppLink(selectedProduct.whatsappText)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-green-400 to-green-600 text-white font-semibold rounded-lg shadow-md hover:from-green-500 hover:to-green-700 transition-all duration-300 text-lg"
+                >
+                  <MessageCircleMore className="w-5 h-5 mr-3" /> Inquire on WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer Section */}
+      <footer className="bg-gray-800 text-white p-6 mt-8">
+        <div className="container mx-auto text-center text-sm">
+          <p>&copy; 2025 Glamour Threads. All rights reserved.</p>
+          <p className="mt-2">
+            For any queries, connect with us on WhatsApp{' '}
+            <a
+              href={getWhatsAppLink('Hello! I have a general inquiry about your collection.')}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-green-400 hover:underline"
+            >
+              here
+            </a>.
+          </p>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
